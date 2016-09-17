@@ -8,12 +8,13 @@ import { createStore, applyMiddleware } from 'redux';
 // browserHistory tells React how to respond to a change in the URL - whenever the URL updates, React will interpret everything after the protocol (ex. http://www.blog.com -> /posts/5)
 import { Router, browserHistory } from 'react-router';
 import reducers from './reducers';
+import routes from './routes';
 
 const createStoreWithMiddleware = applyMiddleware()(createStore);
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
-  <Router history={browserHistory} />
+  <Router history={browserHistory} routes={routes} />
   </Provider>
   , document.querySelector('.container'));
 
