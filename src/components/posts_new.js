@@ -1,10 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { createPost } from '../actions/index';
 import { Link } from 'react-router';
 
 
 class PostsNew extends Component {
+
+	// define context - an object on the PostsNew class (for redirects to index when form successfully submits)
+	static contextTypes = {
+		router: PropTypes.object
+	};
+
+	// when handleSubmit calls, it'll call this.onSubmit and pass properties from the form (helper)
+	onSubmit(props) {
+		this.props.createPost(props)
+			.then(() => {
+				// blog post has been created, navigate user to index
+				// we navigate by calling this.context.router.push with the new path to navigate to
+				this.context.router.push('/');
+			});
+	}
 	// define life cycle component
 	render() {
 		const { fields: { title, categories, content}, handleSubmit } = this.props;
@@ -16,7 +31,7 @@ class PostsNew extends Component {
 			// when form is submitted, handleSubmit will be called with form contents. if form is valid, handleSubmit will call action creator (this.props.createPost) with the same form contents
 			// add has-danger class (from bootstrap) if field was touched and is invalid (can be made into a separate helper function)
 			// {`form-group ${categories.touched && categories.invalid ? 'has-danger' : ''}`}
-			<form onSubmit={handleSubmit(this.props.createPost)}>
+			<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 				<h3>Create a New Post</h3>
 					<div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
 					<label>Title</label>
