@@ -11,13 +11,29 @@ class PostsIndex extends Component {
 		// add action creator - this needs to be a container!
 		this.props.fetchPosts();
 	}
+
+	renderPosts() {
+		return this.props.posts.map((post) => {
+			return (
+					<li className="list-group-item" key={post.id}>
+					<Link to={"posts/" + post.id}>
+						<span className="pull-right">{post.categories}</span>
+						<strong>{post.title}</strong>
+						</Link>
+						</li>
+			);
+		});
+	}
 	render() {
 		return (
 			<div>
 				<div className="text-xs-right">
 					<Link to="/posts/new" className="btn btn-primary">Add a Post</Link>
 				</div>
-			List of blog posts
+			<h3>Posts</h3>
+				<ul className="list-group">
+					{ this.renderPosts() }
+				</ul>
 			</div>
 			);
 	}
@@ -28,8 +44,12 @@ class PostsIndex extends Component {
 // 	return bindActionCreators( { fetchPosts }, dispatch);
 // }
 
+function mapStateToProps(state) {
+	return { posts: state.posts.all };
+}
+
 // null argument if you don't have mapStateToProps
 // { fetchPosts: fetchPosts } object equivalent to mapDispatchToProps function
 // export default connect(null, { fetchPosts: fetchPosts} )(PostsIndex);
 // ES6 syntax (when key and value are the same)
-export default connect(null, { fetchPosts} )(PostsIndex);
+export default connect(mapStateToProps, { fetchPosts} )(PostsIndex);
